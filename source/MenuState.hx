@@ -21,6 +21,7 @@ class MenuState extends FlxState{
 	override public function create(){
 		super.create();
 
+
 		tutIndex = -1;
 
 		title = new FlxSprite();
@@ -124,7 +125,7 @@ class MenuState extends FlxState{
 	}
 
 	function onTutPrev(){
-		tutIndex = -1;
+		tutIndex--;
 		if(tutIndex < -1){
 			tutIndex = -1;
 		}
@@ -189,9 +190,9 @@ class MenuState extends FlxState{
 
 	function startLevel(level:Int):Void{
 		switch(level){
-			default: 	FlxG.switchState(new PlayState(level, 5, 	1, 30, 10));
+			default: 	FlxG.switchState(new PlayState(level, 5, 	1, 3, 1));
 			case 2: 	FlxG.switchState(new PlayState(level, 10, 	1, 3, 1));
-			case 3: 	FlxG.switchState(new PlayState(level, 30, 	1, 5, 1));
+			case 3: 	FlxG.switchState(new PlayState(level, 30, 	1, 5, 2));
 			case 4: 	FlxG.switchState(new PlayState(level, 30, 	2, 5, 2));
 			case 5: 	FlxG.switchState(new PlayState(level, 40, 	2, 5, 2));
 			case 6: 	FlxG.switchState(new PlayState(level, 27, 	3, 5, 3));
