@@ -26,9 +26,11 @@ class SFButton extends FlxSprite {
 	}
 
 	override public function update(elapsed:Float){
+		label.visible = visible;
+		if(!visible) return;
 		super.update(elapsed);
 		updateHitbox();
-		
+
 		label.x = x;
 		label.y = y;
 		label.fieldWidth = width;

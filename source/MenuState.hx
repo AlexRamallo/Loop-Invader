@@ -13,16 +13,22 @@ class MenuState extends FlxState{
 	var title:FlxSprite;
 
 	var tutorials:Array<FlxSprite>;
+	var levelButtons:Array<SFButton>;
 	var btn_tut_next:SFButton;
 	var btn_tut_prev:SFButton;
+	var tutIndex:Int;
 
 	override public function create(){
 		super.create();
+
+		tutIndex = -1;
 
 		title = new FlxSprite();
 		title.loadGraphic(AssetPaths.menu__png, false);
 		title.setGraphicSize(FlxG.width, FlxG.height);
 		add(title);
+
+		levelButtons = [];
 
 		addButton("Level 1", 44, 178, 1);
 		addButton("Level 2", 44, 258, 2);
@@ -35,6 +41,7 @@ class MenuState extends FlxState{
 		addButton("Level 8", 344, 338, 8);
 		addButton("Level 9", 344, 418, 9);
 		addButton("Level 10", 344, 498, 10);
+		addButton("Tutorial", 570, 398, -1);
 
 		tutorials = [];
 
@@ -92,6 +99,7 @@ class MenuState extends FlxState{
 			btn.x = FlxG.width - 50;
 			btn.y = FlxG.height - 50;
 			btn.doAdd(this);
+			btn.visible = false;
 			btn_tut_next = btn;
 		}
 		{
@@ -103,40 +111,80 @@ class MenuState extends FlxState{
 			btn.x = btn_tut_next.x - (btn.width + 10);
 			btn.y = FlxG.height - 50;
 			btn.doAdd(this);
+			btn.visible = false;
 			btn_tut_prev = btn;
 		}
 	}
 
 	function onTutNext(){
-		//--
+		tutIndex++;
+		if(tutIndex >= tutorials.length){
+			tutIndex = -1;
+		}
 	}
 
 	function onTutPrev(){
-		//--
+		tutIndex = -1;
+		if(tutIndex < -1){
+			tutIndex = -1;
+		}
 	}
 
 	function addButton(str:String, x:Int, y:Int, level:Int){
 		var btn = new SFButton(str);
-		btn.onClick = function(){ startLevel(level); }
 		btn.x = x;
 		btn.y = y;
 		btn.doAdd(this);
 
-		if(Progress.getInstance().wins[level]){
-			var star = new FlxSprite();
-			star.loadGraphic(AssetPaths.starico__png, false);
-			star.scale.y = (btn.height * 0.8) / star.height;
-			star.scale.x = star.scale.y;
-			star.updateHitbox();
-			star.x = btn.x + btn.width;
-			star.y = btn.y + ((btn.height - star.height) / 2);
-			add(star);
+		if(level >= 0){
+			btn.onClick = function(){ startLevel(level); }
+			if(Progress.getInstance().wins[level]){
+				var star = new FlxSprite();
+				star.loadGraphic(AssetPaths.starico__png, false);
+				star.scale.y = (btn.height * 0.8) / star.height;
+				star.scale.x = star.scale.y;
+				star.updateHitbox();
+				star.x = btn.x + btn.width;
+				star.y = btn.y + ((btn.height - star.height) / 2);
+				add(star);
+			}
+		}else{
+			btn.onClick = function(){
+				tutIndex = 0;
+			}
 		}
+
+		levelButtons.push(btn);
+
 		return btn;
 	}
 
 	override public function update(elapsed:Float){
 		super.update(elapsed);
+
+		if(tutIndex >= 0){
+			for(btn in levelButtons){
+				btn.visible = false;
+			}
+
+			btn_tut_next.visible = true;
+			btn_tut_prev.visible = true;
+
+			for(i in 0...tutorials.length){
+				tutorials[i].visible = i == tutIndex;
+			}
+		}else{
+			for(btn in levelButtons){
+				btn.visible = true;
+			}
+
+			btn_tut_next.visible = false;
+			btn_tut_prev.visible = false;
+
+			for(i in 0...tutorials.length){
+				tutorials[i].visible = false;
+			}
+		}
 	}
 
 	function startLevel(level:Int):Void{
