@@ -61,7 +61,7 @@ class PlayState extends FlxState{
 		EndMessage.visible = true;
 		EndMessage.animation.frameIndex = 1;
 		EndMessage.y = FlxG.height;
-		Progress.getInstance().wins[level] = true;
+		Progress.getInstance().wins[level - 1] = true;
 	}
 
 	public function onLoss(){

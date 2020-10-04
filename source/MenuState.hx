@@ -115,6 +115,23 @@ class MenuState extends FlxState{
 			btn.visible = false;
 			btn_tut_prev = btn;
 		}
+
+		//social
+		#if js
+		{
+			var btn = new SFButton('Twitter');
+			btn.onClick = function(){
+				untyped {
+					window.open('https://twitter.com/alexramallo');
+				}
+			}
+			btn.x = 570;
+			btn.y = 478;
+			btn.visible = true;
+			btn.doAdd(this);
+			levelButtons.push(btn);
+		}
+		#end
 	}
 
 	function onTutNext(){
@@ -139,7 +156,7 @@ class MenuState extends FlxState{
 
 		if(level >= 0){
 			btn.onClick = function(){ startLevel(level); }
-			if(Progress.getInstance().wins[level]){
+			if(Progress.getInstance().wins[level - 1]){
 				var star = new FlxSprite();
 				star.loadGraphic(AssetPaths.starico__png, false);
 				star.scale.y = (btn.height * 0.8) / star.height;
